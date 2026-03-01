@@ -140,7 +140,7 @@ def get_qa_chain(vectorstore):
     """创建问答链"""
     # 初始化大模型
     llm = ChatTongyi(
-        model_name="qwen-max",
+        model_name="qwen3.5-flash",
         dashscope_api_key=DASHSCOPE_API_KEY,
         temperature=0.7
     )
