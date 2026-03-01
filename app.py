@@ -5,7 +5,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models.tongyi import ChatTongyi
-from langchain.chains import RetrievalQA
+try:
+    from langchain.chains import RetrievalQA
+except ModuleNotFoundError:
+    from langchain_classic.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
 import tempfile
