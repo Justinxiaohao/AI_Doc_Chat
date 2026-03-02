@@ -62,8 +62,14 @@ if not DASHSCOPE_API_KEY:
     """)
     st.stop()
 
-# 设置API Base
-os.environ["DASHSCOPE_API_BASE"] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+# 注意：ChatTongyi/DashScope SDK 使用官方默认地址即可。
+# 强制设置为 OpenAI 兼容地址会导致 URL 拼接错误（url error）。
+# 如需自定义，仅在你确认是 DashScope SDK 可用地址时再设置。
+# os.environ["DASHSCOPE_API_BASE"] = "https://dashscope.aliyuncs.com/api/v1"
+
+# 低成本模型可通过环境变量覆盖（例如某个低价 plus 快照版本）
+LLM_MODEL_NAME = os.getenv("DASHSCOPE_LLM_MODEL", "qwen-plus")
+EMBEDDING_MODEL_NAME = os.getenv("DASHSCOPE_EMBEDDING_MODEL", "text-embedding-v3")
 
 # 临时目录用于存储上传的文件和向量数据库
 TEMP_DIR = Path(tempfile.gettempdir()) / "rag_system"
@@ -119,7 +125,7 @@ def create_vectorstore(documents):
     """创建向量存储"""
     # 初始化embedding模型
     embeddings = DashScopeEmbeddings(
-        model="text-embedding-v3",
+        model=EMBEDDING_MODEL_NAME,
         dashscope_api_key=DASHSCOPE_API_KEY
     )
     
@@ -140,7 +146,7 @@ def get_qa_chain(vectorstore):
     """创建问答链"""
     # 初始化大模型
     llm = ChatTongyi(
-        model_name="qwen-max",
+        model_name=LLM_MODEL_NAME,
         dashscope_api_key=DASHSCOPE_API_KEY,
         temperature=0.7
     )

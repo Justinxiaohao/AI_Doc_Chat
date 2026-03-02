@@ -7,7 +7,7 @@
 - 📁 **文档上传**: 支持PDF和TXT文件上传
 - ✂️ **智能切片**: 自动按1000字符切片，重叠200字符
 - 🔍 **向量检索**: 使用阿里云百炼text-embedding-v3模型生成向量
-- 💬 **智能问答**: 基于qwen-max模型生成回答
+- 💬 **智能问答**: 基于qwen-plus模型生成回答（支持通过环境变量切换低成本模型）
 - 📎 **来源追踪**: 显示回答来源的具体文档和片段
 - 💾 **对话历史**: 保存对话历史，支持清空
 
@@ -23,18 +23,23 @@
 1. **克隆或下载项目**
 
 2. **安装依赖**
+
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **配置API密钥**
+3. **配置API密钥与模型**
 
-创建`.env`文件（参考`.env.example`），填入您的阿里云百炼API密钥：
+创建`.env`文件（参考`.env.example`）：
+
 ```
 DASHSCOPE_API_KEY=your_api_key_here
+DASHSCOPE_LLM_MODEL=qwen-plus
+DASHSCOPE_EMBEDDING_MODEL=text-embedding-v3
 ```
 
 4. **运行应用**
+
 ```bash
 streamlit run app.py
 ```
@@ -56,9 +61,16 @@ streamlit run app.py
 
 ### 模型配置
 
-- **Embedding模型**: text-embedding-v3
-- **对话模型**: qwen-max（可在代码中改为qwen-turbo）
-- **API Base**: https://dashscope.aliyuncs.com/compatible-mode/v1
+- **Embedding模型**: `text-embedding-v3`（默认）
+- **对话模型**: `qwen-plus`（默认，通常比`qwen-max`成本更低）
+- **可选环境变量**：
+  ```
+  DASHSCOPE_LLM_MODEL=qwen-plus
+  DASHSCOPE_EMBEDDING_MODEL=text-embedding-v3
+  ```
+
+> 说明：项目使用 `ChatTongyi/DashScope` SDK，通常无需手动设置 `DASHSCOPE_API_BASE`。  
+> 若强制设置为不匹配的地址，可能触发 `url error`。
 
 ### 切片参数
 
@@ -89,6 +101,8 @@ streamlit run app.py
    - 添加以下环境变量：
      ```
      DASHSCOPE_API_KEY=your_api_key_here
+     DASHSCOPE_LLM_MODEL=qwen-plus
+     DASHSCOPE_EMBEDDING_MODEL=text-embedding-v3
      ```
    - 或者创建`.streamlit/secrets.toml`文件（仅用于本地开发）
 
